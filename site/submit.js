@@ -14,6 +14,7 @@ const template = {
   issue_url: "https://github.com/forwardnetworks/example-integration/issues",
   license: "Apache-2.0",
   last_release_date: "2026-02-26",
+  last_repo_commit_date: "2026-02-26",
   last_verified_date: "2026-02-26",
   compatibility: {
     forward_min_version: "24.1",

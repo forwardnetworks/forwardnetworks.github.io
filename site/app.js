@@ -45,7 +45,7 @@ function readinessFor(entry) {
 }
 
 function inactiveFor(entry) {
-  const releaseAge = daysSince(entry.last_release_date);
+  const releaseAge = daysSince(entry.last_repo_commit_date);
   const verifyAge = daysSince(entry.last_verified_date);
   if (releaseAge === null || verifyAge === null) {
     return false;
@@ -75,7 +75,10 @@ function cardTemplate(entry, index) {
   const targets = entry.integration_targets.map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
   const delay = Math.min(index * 60, 420);
   const readiness = readinessFor(entry);
-  const readinessText = readiness.ageDays === null ? "Unknown" : `Verified ${readiness.ageDays}d ago`;
+  const verifiedText = readiness.ageDays === null ? "Catalog verified: unknown" : `Catalog verified: ${readiness.ageDays}d ago`;
+  const repoActivityDays = daysSince(entry.last_repo_commit_date);
+  const repoActivityText =
+    repoActivityDays === null ? "Last repo activity: unknown" : `Last repo activity: ${entry.last_repo_commit_date} (${repoActivityDays}d ago)`;
   const inactiveBadge = inactiveFor(entry) ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
   const forkBadge = entry.fork ? '<span class="readiness-badge readiness-fork">fork</span>' : "";
   const forkMeta = entry.fork
@@ -92,7 +95,8 @@ function cardTemplate(entry, index) {
         <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
         ${forkBadge}
         ${inactiveBadge}
-        <span class="readiness-text">${escapeHtml(readinessText)}</span>
+        <span class="readiness-text">${escapeHtml(verifiedText)}</span>
+        <span class="readiness-text">${escapeHtml(repoActivityText)}</span>
       </div>
       ${forkMeta}
       <p class="meta">Owner: ${escapeHtml(entry.owner_team)} | Verified by: ${linkedHandle(entry.verified_by)}</p>
@@ -143,6 +147,7 @@ function filterEntries(entries, query, targetFilter) {
       entry.maturity,
       entry.support_tier,
       entry.last_verified_date,
+      entry.last_repo_commit_date,
       entry.owner_team,
       entry.verified_by,
       readiness.label,

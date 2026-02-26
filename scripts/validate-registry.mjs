@@ -63,6 +63,7 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
     "issue_url",
     "license",
     "last_release_date",
+    "last_repo_commit_date",
     "last_verified_date",
     "compatibility",
     "security_notes"
@@ -133,6 +134,7 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
   }
 
   parseDate("last_release_date", entry.last_release_date, errors, prefix);
+  parseDate("last_repo_commit_date", entry.last_repo_commit_date, errors, prefix, { disallowFuture: true });
   const verifiedDate = parseDate("last_verified_date", entry.last_verified_date, errors, prefix, { disallowFuture: true });
   if (verifiedDate) {
     const now = new Date();

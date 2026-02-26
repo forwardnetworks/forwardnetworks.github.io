@@ -27,7 +27,8 @@
         "aws"
       ]
     },
-    "security_notes": "Use least-privilege IAM roles and rotate credentials regularly."
+    "security_notes": "Use least-privilege IAM roles and rotate credentials regularly.",
+    "last_repo_commit_date": "2025-12-05"
   },
   {
     "id": "forward-mcp",
@@ -57,7 +58,8 @@
         "mcp"
       ]
     },
-    "security_notes": "Use least-privilege API credentials and restrict tool execution scope."
+    "security_notes": "Use least-privilege API credentials and restrict tool execution scope.",
+    "last_repo_commit_date": "2026-01-05"
   },
   {
     "id": "forward-netbox",
@@ -87,7 +89,8 @@
         "netbox"
       ]
     },
-    "security_notes": "Avoid long-lived tokens and audit repository secrets periodically."
+    "security_notes": "Avoid long-lived tokens and audit repository secrets periodically.",
+    "last_repo_commit_date": "2025-10-23"
   },
   {
     "id": "forward-servicenow-demo",
@@ -117,7 +120,8 @@
         "servicenow"
       ]
     },
-    "security_notes": "Use scoped ServiceNow API credentials and environment-specific secrets."
+    "security_notes": "Use scoped ServiceNow API credentials and environment-specific secrets.",
+    "last_repo_commit_date": "2026-02-26"
   },
   {
     "id": "forwardnetworks-client-go",
@@ -147,7 +151,8 @@
         "go"
       ]
     },
-    "security_notes": "Store API tokens securely and enforce transport security for all API calls."
+    "security_notes": "Store API tokens securely and enforce transport security for all API calls.",
+    "last_repo_commit_date": "2023-05-29"
   },
   {
     "id": "fwd-cvp-extension",
@@ -177,7 +182,8 @@
         "ansible"
       ]
     },
-    "security_notes": "Validate third-party endpoint certs and constrain execution credentials."
+    "security_notes": "Validate third-party endpoint certs and constrain execution credentials.",
+    "last_repo_commit_date": "2021-05-17"
   },
   {
     "id": "intent-gen",
@@ -207,7 +213,8 @@
         "intent"
       ]
     },
-    "security_notes": "Validate generated intents in non-production before enabling enforcement paths."
+    "security_notes": "Validate generated intents in non-production before enabling enforcement paths.",
+    "last_repo_commit_date": "2024-02-23"
   },
   {
     "id": "inventoryapi",
@@ -237,7 +244,8 @@
         "inventory"
       ]
     },
-    "security_notes": "Review data exposure boundaries before exporting inventory outside trusted domains."
+    "security_notes": "Review data exposure boundaries before exporting inventory outside trusted domains.",
+    "last_repo_commit_date": "2025-10-02"
   },
   {
     "id": "nautobot-app-ssot",
@@ -273,7 +281,8 @@
       "upstream_branch": "develop",
       "fork_branch": "forward-enterprise",
       "note": "Forked integration. Maintainers listed here are fork-specific contributors, not upstream project authors."
-    }
+    },
+    "last_repo_commit_date": "2025-10-26"
   },
   {
     "id": "terraform-provider-forward",
@@ -303,6 +312,7 @@
         "terraform"
       ]
     },
-    "security_notes": "Use remote state with encryption and restricted backend access."
+    "security_notes": "Use remote state with encryption and restricted backend access.",
+    "last_repo_commit_date": "2025-10-21"
   }
 ]

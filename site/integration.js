@@ -50,7 +50,7 @@ function readinessFor(entry) {
 }
 
 function inactiveFor(entry) {
-  const releaseAge = daysSince(entry.last_release_date);
+  const releaseAge = daysSince(entry.last_repo_commit_date);
   const verifyAge = daysSince(entry.last_verified_date);
   if (releaseAge === null || verifyAge === null) {
     return false;
@@ -93,7 +93,12 @@ function renderEntry(entry) {
   const readiness = readinessFor(entry);
   const isInactive = inactiveFor(entry);
   const targetBadges = (entry.integration_targets || []).map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
-  const readinessText = readiness.ageDays === null ? "Unknown verification age" : `${readiness.ageDays} days since verification`;
+  const readinessText = readiness.ageDays === null ? "Catalog verified: unknown" : `Catalog verified: ${readiness.ageDays} days ago`;
+  const repoActivityDays = daysSince(entry.last_repo_commit_date);
+  const repoActivityText =
+    repoActivityDays === null
+      ? "Last repo activity: unknown"
+      : `Last repo activity: ${entry.last_repo_commit_date} (${repoActivityDays} days ago)`;
   const inactiveBadge = isInactive ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
   const forkBadge = entry.fork ? '<span class="readiness-badge readiness-fork">fork</span>' : "";
   const forkPanel = entry.fork
@@ -114,7 +119,7 @@ function renderEntry(entry) {
       ${forkBadge}
       ${inactiveBadge}
       <span class="readiness-text">${escapeHtml(readinessText)}</span>
-      <span class="readiness-text">Last verified: ${escapeHtml(entry.last_verified_date)}</span>
+      <span class="readiness-text">${escapeHtml(repoActivityText)}</span>
     </div>
     ${forkPanel}
 
@@ -150,6 +155,14 @@ function renderEntry(entry) {
       <div class="detail-item">
         <p>License</p>
         <p>${escapeHtml(entry.license)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Last Repo Commit Date</p>
+        <p>${escapeHtml(entry.last_repo_commit_date)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Catalog Last Verified</p>
+        <p>${escapeHtml(entry.last_verified_date)}</p>
       </div>
       <div class="detail-item">
         <p>Last Release Date</p>

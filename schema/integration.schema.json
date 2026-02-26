@@ -19,6 +19,7 @@
     "issue_url",
     "license",
     "last_release_date",
+    "last_repo_commit_date",
     "last_verified_date",
     "compatibility",
     "security_notes"
@@ -50,6 +51,7 @@
     "issue_url": { "type": "string", "format": "uri" },
     "license": { "type": "string", "minLength": 1 },
     "last_release_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "last_repo_commit_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
     "last_verified_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
     "compatibility": {
       "type": "object",
