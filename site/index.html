@@ -48,6 +48,30 @@
           <label for="search">Search</label>
           <input id="search" type="search" placeholder="Search by name, target, category, or readiness" />
         </div>
+        <div class="control-grid">
+          <div class="field-wrap">
+            <label for="sort">Sort</label>
+            <select id="sort">
+              <option value="trust">Trust signal</option>
+              <option value="recent">Recent activity</option>
+              <option value="name">Name</option>
+            </select>
+          </div>
+          <div class="field-wrap">
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="all">All</option>
+              <option value="fresh">Fresh</option>
+              <option value="aging">Aging</option>
+              <option value="stale">Stale</option>
+              <option value="inactive">Inactive (6m+)</option>
+            </select>
+          </div>
+          <label class="toggle-wrap" for="show-inactive">
+            <input id="show-inactive" type="checkbox" />
+            <span>Show inactive listings</span>
+          </label>
+        </div>
       </section>
 
       <section class="trust-strip">

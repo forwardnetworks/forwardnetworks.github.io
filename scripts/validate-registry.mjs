@@ -5,6 +5,7 @@ const registryPath = new URL("../catalog/integrations.json", import.meta.url);
 const allowedCategories = new Set(["source-of-truth", "automation", "cloud-sync", "reporting", "other"]);
 const allowedMaturity = new Set(["incubating", "active", "deprecated"]);
 const allowedSupport = new Set(["best_effort"]);
+const allowedMaintainerSource = new Set(["manual", "derived_recent_contributors"]);
 const idRegex = /^[a-z0-9-]+$/;
 const maintainerRegex = /^@[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?$/;
 const upstreamRepoRegex = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
@@ -57,6 +58,7 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
     "maturity",
     "support_tier",
     "maintainers",
+    "maintainer_source",
     "verified_by",
     "issue_url",
     "license",
@@ -117,6 +119,20 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
         errors.push(`${prefix}maintainer '${maintainer}' is invalid`);
       }
     }
+  }
+
+  if (!allowedMaintainerSource.has(entry.maintainer_source)) {
+    errors.push(`${prefix}maintainer_source must be one of: ${[...allowedMaintainerSource].join(", ")}`);
+  } else if (entry.maintainer_source === "derived_recent_contributors") {
+    if (!entry.maintainer_last_derived_date) {
+      errors.push(`${prefix}maintainer_last_derived_date is required when maintainer_source is derived_recent_contributors`);
+    } else {
+      parseDate("maintainer_last_derived_date", entry.maintainer_last_derived_date, errors, prefix, {
+        disallowFuture: true
+      });
+    }
+  } else if (entry.maintainer_last_derived_date) {
+    errors.push(`${prefix}maintainer_last_derived_date must be omitted when maintainer_source is manual`);
   }
 
   if (typeof entry.verified_by !== "string" || !maintainerRegex.test(entry.verified_by)) {

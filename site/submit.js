@@ -9,6 +9,7 @@ const template = {
   maturity: "incubating",
   support_tier: "best_effort",
   maintainers: ["@your-github-handle"],
+  maintainer_source: "manual",
   verified_by: "@your-github-handle",
   issue_url: "https://github.com/forwardnetworks/example-integration/issues",
   license: "Apache-2.0",

@@ -3,9 +3,12 @@
   "private": true,
   "version": "0.1.0",
   "description": "Forward integrations catalog and static site",
+  "type": "module",
   "scripts": {
     "validate": "node scripts/validate-registry.mjs",
+    "test": "node --test",
     "check-links": "node scripts/check-links.mjs",
-    "build": "node scripts/build-site.mjs"
+    "build": "node scripts/build-site.mjs",
+    "refresh:metadata": "node scripts/refresh-metadata.mjs"
   }
 }

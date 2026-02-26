@@ -1,79 +1,16 @@
-const FRESH_DAYS = 30;
-const STALE_DAYS = 90;
-const INACTIVE_DAYS = 180;
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+import {
+  escapeHtml,
+  inactiveFor,
+  linkedHandle,
+  maintainerSourceLabel,
+  readinessFor,
+  titleCase,
+  toRelativeLabel
+} from "./catalog-model.js";
 
 function getId() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
-}
-
-function parseDate(dateString) {
-  const value = new Date(`${dateString}T00:00:00Z`);
-  return Number.isNaN(value.getTime()) ? null : value;
-}
-
-function daysSince(dateString) {
-  const parsed = parseDate(dateString);
-  if (!parsed) {
-    return null;
-  }
-  const now = new Date();
-  const utcToday = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  const dayMs = 24 * 60 * 60 * 1000;
-  return Math.floor((utcToday - parsed.getTime()) / dayMs);
-}
-
-function readinessFor(entry) {
-  const ageDays = daysSince(entry.last_verified_date);
-  if (ageDays === null) {
-    return { label: "unknown", className: "readiness-unknown", ageDays: null };
-  }
-
-  if (ageDays <= FRESH_DAYS) {
-    return { label: "fresh", className: "readiness-fresh", ageDays };
-  }
-
-  if (ageDays <= STALE_DAYS) {
-    return { label: "aging", className: "readiness-aging", ageDays };
-  }
-
-  return { label: "stale", className: "readiness-stale", ageDays };
-}
-
-function inactiveFor(entry) {
-  const releaseAge = daysSince(entry.last_repo_commit_date);
-  const verifyAge = daysSince(entry.last_verified_date);
-  if (releaseAge === null || verifyAge === null) {
-    return false;
-  }
-  return releaseAge > INACTIVE_DAYS && verifyAge > INACTIVE_DAYS;
-}
-
-function titleCase(value) {
-  return value
-    .split("_")
-    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
-    .join(" ");
-}
-
-function handleToGithubUrl(handle) {
-  const normalized = String(handle || "").replace(/^@/, "");
-  return `https://github.com/${normalized}`;
-}
-
-function linkedHandle(handle) {
-  const safeHandle = escapeHtml(handle);
-  const href = escapeHtml(handleToGithubUrl(handle));
-  return `<a class="meta-link" href="${href}" target="_blank" rel="noopener noreferrer">${safeHandle}</a>`;
 }
 
 async function loadEntry(id) {
@@ -86,26 +23,28 @@ async function loadEntry(id) {
 }
 
 function renderEntry(entry) {
+  const now = new Date();
   const name = document.getElementById("name");
   const details = document.getElementById("details");
   name.textContent = entry.name;
 
-  const readiness = readinessFor(entry);
-  const isInactive = inactiveFor(entry);
+  const readiness = readinessFor(entry, now);
+  const isInactive = inactiveFor(entry, now);
   const targetBadges = (entry.integration_targets || []).map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
-  const readinessText = readiness.ageDays === null ? "Catalog verified: unknown" : `Catalog verified: ${readiness.ageDays} days ago`;
-  const repoActivityDays = daysSince(entry.last_repo_commit_date);
-  const repoActivityText =
-    repoActivityDays === null
-      ? "Last repo activity: unknown"
-      : `Last repo activity: ${entry.last_repo_commit_date} (${repoActivityDays} days ago)`;
+
+  const repoActivityRelative = toRelativeLabel(entry.last_repo_commit_date, now);
+  const verifiedRelative = toRelativeLabel(entry.last_verified_date, now);
+
   const inactiveBadge = isInactive ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
   const forkBadge = entry.fork ? '<span class="readiness-badge readiness-fork">fork</span>' : "";
+
   const forkPanel = entry.fork
     ? `<div class="notice">
       Fork source: <a class="meta-link" href="https://github.com/${escapeHtml(entry.fork.upstream_repo)}" target="_blank" rel="noopener noreferrer">${escapeHtml(entry.fork.upstream_repo)}</a> (${escapeHtml(entry.fork.upstream_branch)} -> ${escapeHtml(entry.fork.fork_branch)}). ${escapeHtml(entry.fork.note)}
     </div>`
     : "";
+
+  const maintainerSource = maintainerSourceLabel(entry);
 
   details.innerHTML = `
     <h2>${escapeHtml(entry.name)}</h2>
@@ -118,9 +57,10 @@ function renderEntry(entry) {
       <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
       ${forkBadge}
       ${inactiveBadge}
-      <span class="readiness-text">${escapeHtml(readinessText)}</span>
-      <span class="readiness-text">${escapeHtml(repoActivityText)}</span>
+      <span class="readiness-text">Catalog verified: ${escapeHtml(entry.last_verified_date)} (${escapeHtml(verifiedRelative)})</span>
+      <span class="readiness-text">Last repo activity: ${escapeHtml(entry.last_repo_commit_date)} (${escapeHtml(repoActivityRelative)})</span>
     </div>
+    <p class="meta microcopy">Confidence signal: catalog freshness + repo activity are tracked separately.</p>
     ${forkPanel}
 
     <div class="detail-grid">
@@ -167,6 +107,10 @@ function renderEntry(entry) {
       <div class="detail-item">
         <p>Maintainers</p>
         <p>${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
+      </div>
+      <div class="detail-item">
+        <p>Maintainer Attribution</p>
+        <p>${escapeHtml(maintainerSource)}</p>
       </div>
     </div>
 

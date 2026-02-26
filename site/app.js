@@ -1,85 +1,36 @@
-const FRESH_DAYS = 30;
-const STALE_DAYS = 90;
-const INACTIVE_DAYS = 180;
+import {
+  DEFAULT_CATALOG_STATE,
+  compareEntries,
+  escapeHtml,
+  inactiveFor,
+  linkedHandle,
+  maintainerSourceLabel,
+  parseCatalogState,
+  readinessFor,
+  stateToSearchParams,
+  titleCase,
+  toRelativeLabel
+} from "./catalog-model.js";
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function parseDate(dateString) {
-  const value = new Date(`${dateString}T00:00:00Z`);
-  return Number.isNaN(value.getTime()) ? null : value;
-}
-
-function daysSince(dateString) {
-  const parsed = parseDate(dateString);
-  if (!parsed) {
-    return null;
-  }
-  const now = new Date();
-  const utcToday = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  const dayMs = 24 * 60 * 60 * 1000;
-  return Math.floor((utcToday - parsed.getTime()) / dayMs);
-}
-
-function readinessFor(entry) {
-  const ageDays = daysSince(entry.last_verified_date);
-  if (ageDays === null) {
-    return { label: "unknown", className: "readiness-unknown", ageDays: null };
+function matchesStatus(entry, status, now = new Date()) {
+  if (status === "all") {
+    return true;
   }
 
-  if (ageDays <= FRESH_DAYS) {
-    return { label: "fresh", className: "readiness-fresh", ageDays };
+  if (status === "inactive") {
+    return inactiveFor(entry, now);
   }
 
-  if (ageDays <= STALE_DAYS) {
-    return { label: "aging", className: "readiness-aging", ageDays };
-  }
-
-  return { label: "stale", className: "readiness-stale", ageDays };
+  return readinessFor(entry, now).label === status;
 }
 
-function inactiveFor(entry) {
-  const releaseAge = daysSince(entry.last_repo_commit_date);
-  const verifyAge = daysSince(entry.last_verified_date);
-  if (releaseAge === null || verifyAge === null) {
-    return false;
-  }
-  return releaseAge > INACTIVE_DAYS && verifyAge > INACTIVE_DAYS;
-}
-
-function titleCase(value) {
-  return value
-    .split("_")
-    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
-    .join(" ");
-}
-
-function handleToGithubUrl(handle) {
-  const normalized = String(handle || "").replace(/^@/, "");
-  return `https://github.com/${normalized}`;
-}
-
-function linkedHandle(handle) {
-  const safeHandle = escapeHtml(handle);
-  const href = escapeHtml(handleToGithubUrl(handle));
-  return `<a class="meta-link" href="${href}" target="_blank" rel="noopener noreferrer">${safeHandle}</a>`;
-}
-
-function cardTemplate(entry, index) {
+function cardTemplate(entry, index, now = new Date()) {
   const targets = entry.integration_targets.map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
   const delay = Math.min(index * 60, 420);
-  const readiness = readinessFor(entry);
-  const verifiedText = readiness.ageDays === null ? "Catalog verified: unknown" : `Catalog verified: ${readiness.ageDays}d ago`;
-  const repoActivityDays = daysSince(entry.last_repo_commit_date);
-  const repoActivityText =
-    repoActivityDays === null ? "Last repo activity: unknown" : `Last repo activity: ${entry.last_repo_commit_date} (${repoActivityDays}d ago)`;
-  const inactiveBadge = inactiveFor(entry) ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
+  const readiness = readinessFor(entry, now);
+  const repoActivityLabel = toRelativeLabel(entry.last_repo_commit_date, now);
+  const verifiedLabel = toRelativeLabel(entry.last_verified_date, now);
+  const inactiveBadge = inactiveFor(entry, now) ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
   const forkBadge = entry.fork ? '<span class="readiness-badge readiness-fork">fork</span>' : "";
   const forkMeta = entry.fork
     ? `<p class="meta">Fork source: <a class="meta-link" href="https://github.com/${escapeHtml(entry.fork.upstream_repo)}" target="_blank" rel="noopener noreferrer">${escapeHtml(entry.fork.upstream_repo)}</a></p>`
@@ -95,12 +46,14 @@ function cardTemplate(entry, index) {
         <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
         ${forkBadge}
         ${inactiveBadge}
-        <span class="readiness-text">${escapeHtml(verifiedText)}</span>
-        <span class="readiness-text">${escapeHtml(repoActivityText)}</span>
+        <span class="readiness-text">Catalog verified: ${escapeHtml(entry.last_verified_date)} (${escapeHtml(verifiedLabel)})</span>
+        <span class="readiness-text">Last repo activity: ${escapeHtml(entry.last_repo_commit_date)} (${escapeHtml(repoActivityLabel)})</span>
       </div>
+      <p class="meta microcopy">Confidence signal: catalog freshness + repo activity.</p>
       ${forkMeta}
       <p class="meta">Verified by: ${linkedHandle(entry.verified_by)}</p>
       <p class="meta">Maintainers: ${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
+      <p class="meta">Attribution: ${escapeHtml(maintainerSourceLabel(entry))}</p>
       <div class="actions">
         <a class="btn" href="./integration.html?id=${encodeURIComponent(entry.id)}">Details</a>
         <a class="btn" href="${escapeHtml(entry.repo_url)}" target="_blank" rel="noopener noreferrer">Repository</a>
@@ -118,17 +71,22 @@ async function loadData() {
   return response.json();
 }
 
-function renderCards(entries) {
-  const container = document.getElementById("cards");
-  container.innerHTML = entries.map((entry, index) => cardTemplate(entry, index)).join("\n");
-}
-
-function filterEntries(entries, query, targetFilter) {
-  const needle = query.trim().toLowerCase();
+function filterEntries(entries, state, now = new Date()) {
+  const needle = state.q.trim().toLowerCase();
 
   return entries.filter((entry) => {
-    const matchesTarget = targetFilter === "all" || entry.integration_targets.includes(targetFilter);
+    const isInactive = inactiveFor(entry, now);
+
+    const matchesTarget = state.target === "all" || entry.integration_targets.includes(state.target);
     if (!matchesTarget) {
+      return false;
+    }
+
+    if (!state.inactive && state.status !== "inactive" && isInactive) {
+      return false;
+    }
+
+    if (!matchesStatus(entry, state.status, now)) {
       return false;
     }
 
@@ -136,9 +94,7 @@ function filterEntries(entries, query, targetFilter) {
       return true;
     }
 
-    const readiness = readinessFor(entry);
-    const inactive = inactiveFor(entry) ? "inactive" : "";
-
+    const readiness = readinessFor(entry, now).label;
     const searchable = [
       entry.id,
       entry.name,
@@ -149,8 +105,9 @@ function filterEntries(entries, query, targetFilter) {
       entry.last_verified_date,
       entry.last_repo_commit_date,
       entry.verified_by,
-      readiness.label,
-      inactive,
+      entry.maintainer_source || "",
+      readiness,
+      isInactive ? "inactive" : "",
       ...(entry.integration_targets || [])
     ]
       .join(" ")
@@ -158,6 +115,12 @@ function filterEntries(entries, query, targetFilter) {
 
     return searchable.includes(needle);
   });
+}
+
+function renderCards(entries) {
+  const now = new Date();
+  const container = document.getElementById("cards");
+  container.innerHTML = entries.map((entry, index) => cardTemplate(entry, index, now)).join("\n");
 }
 
 function renderMetrics(entries) {
@@ -169,7 +132,18 @@ function renderMetrics(entries) {
   document.getElementById("metric-targets").textContent = String(targets);
 }
 
-function renderTargetFilters(entries, onChange) {
+function renderResultCount(count) {
+  document.getElementById("result-count").textContent = `${count} shown`;
+}
+
+function syncUrl(state) {
+  const params = stateToSearchParams(state);
+  const query = params.toString();
+  const next = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+  window.history.replaceState(null, "", next);
+}
+
+function renderTargetFilters(entries, activeTarget, onChange) {
   const counts = new Map();
   for (const entry of entries) {
     for (const target of entry.integration_targets) {
@@ -182,10 +156,10 @@ function renderTargetFilters(entries, onChange) {
   const container = document.getElementById("target-filters");
   const allCount = entries.length;
   container.innerHTML = [
-    `<button class="chip active" data-target="all" type="button">all (${allCount})</button>`,
+    `<button class="chip ${activeTarget === "all" ? "active" : ""}" data-target="all" type="button">all (${allCount})</button>`,
     ...sortedTargets.map(
       ([target, count]) =>
-        `<button class="chip" data-target="${escapeHtml(target)}" type="button">${escapeHtml(target)} (${count})</button>`
+        `<button class="chip ${activeTarget === target ? "active" : ""}" data-target="${escapeHtml(target)}" type="button">${escapeHtml(target)} (${count})</button>`
     )
   ].join("\n");
 
@@ -204,30 +178,70 @@ function renderTargetFilters(entries, onChange) {
   });
 }
 
-function renderResultCount(count) {
-  document.getElementById("result-count").textContent = `${count} shown`;
+function validTarget(entries, target) {
+  if (target === "all") {
+    return true;
+  }
+
+  return entries.some((entry) => entry.integration_targets.includes(target));
 }
 
 async function main() {
   const data = await loadData();
-  const searchInput = document.getElementById("search");
 
-  let currentTarget = "all";
+  const searchInput = document.getElementById("search");
+  const sortSelect = document.getElementById("sort");
+  const statusSelect = document.getElementById("status");
+  const inactiveToggle = document.getElementById("show-inactive");
+
+  const initial = parseCatalogState(new URLSearchParams(window.location.search));
+  const state = {
+    ...DEFAULT_CATALOG_STATE,
+    ...initial,
+    target: validTarget(data, initial.target) ? initial.target : "all"
+  };
+
+  searchInput.value = state.q;
+  sortSelect.value = state.sort;
+  statusSelect.value = state.status;
+  inactiveToggle.checked = state.inactive;
 
   const rerender = () => {
-    const filtered = filterEntries(data, searchInput.value, currentTarget);
+    const now = new Date();
+    const filtered = filterEntries(data, state, now).sort((a, b) => compareEntries(a, b, state.sort, now));
+
     renderCards(filtered);
     renderResultCount(filtered.length);
+    syncUrl(state);
   };
 
   renderMetrics(data);
-  renderTargetFilters(data, (newTarget) => {
-    currentTarget = newTarget;
+  renderTargetFilters(data, state.target, (newTarget) => {
+    state.target = newTarget;
     rerender();
   });
+
   rerender();
 
-  searchInput.addEventListener("input", rerender);
+  searchInput.addEventListener("input", () => {
+    state.q = searchInput.value;
+    rerender();
+  });
+
+  sortSelect.addEventListener("change", () => {
+    state.sort = sortSelect.value;
+    rerender();
+  });
+
+  statusSelect.addEventListener("change", () => {
+    state.status = statusSelect.value;
+    rerender();
+  });
+
+  inactiveToggle.addEventListener("change", () => {
+    state.inactive = inactiveToggle.checked;
+    rerender();
+  });
 }
 
 main().catch((error) => {

@@ -19,9 +19,22 @@ Forward field teams do not provide SLA-backed support for these integrations.
 
 ```bash
 node scripts/validate-registry.mjs
+node --test
 node scripts/check-links.mjs
 node scripts/build-site.mjs
 ```
+
+## Manual Metadata Refresh
+
+```bash
+npm run refresh:metadata
+```
+
+The refresh script updates:
+- `last_repo_commit_date` from each repository default branch
+- `last_release_date` from latest GitHub release (when available)
+- `maintainers` from recent `forwardnetworks` contributors (last 12 months)
+- maintainer provenance fields (`maintainer_source`, `maintainer_last_derived_date`)
 
 ## Local Preview
 

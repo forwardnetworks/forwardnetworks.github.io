@@ -23,5 +23,8 @@ jobs:
       - name: Validate registry schema rules
         run: node scripts/validate-registry.mjs
 
+      - name: Run unit tests
+        run: node --test
+
       - name: Check external links
         run: node scripts/check-links.mjs

@@ -210,7 +210,18 @@ input::placeholder {
   color: #748ca4;
 }
 
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.76rem 0.82rem;
+  font-family: inherit;
+}
+
 input:focus,
+select:focus,
 .chip:focus-visible,
 a.btn:focus-visible,
 button.btn:focus-visible,
@@ -223,6 +234,26 @@ a.card-link:focus-visible {
   display: flex;
   gap: 0.45rem;
   flex-wrap: wrap;
+}
+
+.control-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.toggle-wrap {
+  align-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.toggle-wrap input {
+  width: auto;
 }
 
 .trust-strip {
@@ -311,6 +342,10 @@ a.card-link:focus-visible {
 .meta {
   font-size: 0.85rem;
   color: var(--ink-soft);
+}
+
+.microcopy {
+  font-size: 0.78rem;
 }
 
 .meta-link {
@@ -499,6 +534,10 @@ a.card-link {
 
 @media (max-width: 900px) {
   .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .control-grid {
     grid-template-columns: 1fr;
   }
 
