@@ -7,20 +7,28 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="hero slim">
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-aurora" aria-hidden="true"></div>
+
+    <header class="hero slim shell">
+      <a class="brand-lockup" href="./index.html">
+        <img src="https://www.forwardnetworks.com/wp-content/uploads/2023/03/FN-logo.svg" alt="Forward Networks" />
+        <span>Integrations Catalog</span>
+      </a>
       <a class="back" href="./index.html">Back to catalog</a>
       <h1>Submit an Integration</h1>
     </header>
 
-    <main>
+    <main class="shell">
       <article class="detail-card">
         <h2>Submission Checklist</h2>
-        <p>Open a pull request against this repository and include:</p>
+        <p>Open a pull request and include:</p>
         <ul>
-          <li>A valid `catalog/integrations.json` entry.</li>
-          <li>Working docs and issue links.</li>
-          <li>A repo with README, SUPPORT, SECURITY, and LICENSE files.</li>
+          <li>A valid entry in `catalog/integrations.json`.</li>
+          <li>Working repository, documentation, and issue URLs.</li>
+          <li>Repository contains README, SUPPORT, SECURITY, and LICENSE files.</li>
           <li>Clear maintainer ownership and compatibility notes.</li>
+          <li>Confirmation that support is best-effort and self-supported.</li>
         </ul>
       </article>
     </main>

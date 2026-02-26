@@ -4,31 +4,68 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forward Integrations Catalog</title>
+    <meta
+      name="description"
+      content="Forward integrations catalog: field-built, self-supported integrations for Forward environments."
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <p class="eyebrow">Forward Integrations</p>
-      <h1>Self-Supported Integration Catalog</h1>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-aurora" aria-hidden="true"></div>
+
+    <header class="hero shell">
+      <a class="brand-lockup" href="https://www.forwardnetworks.com/" target="_blank" rel="noopener noreferrer">
+        <img src="https://www.forwardnetworks.com/wp-content/uploads/2023/03/FN-logo.svg" alt="Forward Networks" />
+        <span>Integrations Catalog</span>
+      </a>
+      <p class="eyebrow">Forward Networks | Integrations</p>
+      <h1>Field Integrations Catalog</h1>
       <p class="subtitle">
-        Discover field-built integrations for Forward workflows. Listings are best-effort and maintained by repository owners.
+        Practical adapters, modules, and sync paths built for real customer environments. Explore, evaluate, and adopt with clear
+        ownership.
       </p>
-      <div class="banner">Best-effort only. No field-team SLA.</div>
+      <div class="banner">Best-effort only. Self-supported by listed maintainers. No field-team SLA.</div>
+
+      <div class="hero-metrics" id="hero-metrics">
+        <div class="metric">
+          <p class="metric-label">Listings</p>
+          <p class="metric-value" id="metric-total">0</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Active</p>
+          <p class="metric-value" id="metric-active">0</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Targets</p>
+          <p class="metric-value" id="metric-targets">0</p>
+        </div>
+      </div>
     </header>
 
-    <main>
+    <main class="shell">
       <section class="toolbar">
-        <label for="search">Search</label>
-        <input id="search" type="search" placeholder="Search integrations, targets, or category" />
+        <div class="field-wrap">
+          <label for="search">Search</label>
+          <input id="search" type="search" placeholder="Search by name, target, category, or maturity" />
+        </div>
+        <div class="filters">
+          <p class="filters-title">Category</p>
+          <div id="category-filters" class="chip-row"></div>
+        </div>
+      </section>
+
+      <section class="results-head">
+        <h2>Integrations</h2>
+        <p id="result-count" class="result-count">0 shown</p>
       </section>
 
       <section>
-        <h2>Integrations</h2>
         <div id="cards" class="card-grid"></div>
       </section>
     </main>
 
-    <footer>
+    <footer class="shell site-footer">
       <a href="./support-policy.html">Support policy</a>
       <a href="./submit.html">Submit an integration</a>
     </footer>

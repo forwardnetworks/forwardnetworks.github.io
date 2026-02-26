@@ -1,5 +1,5 @@
 function escapeHtml(value) {
-  return value
+  return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -26,19 +26,56 @@ function renderEntry(entry) {
   const details = document.getElementById("details");
   name.textContent = entry.name;
 
+  const targetBadges = (entry.integration_targets || []).map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
+
   details.innerHTML = `
     <h2>${escapeHtml(entry.name)}</h2>
     <p>${escapeHtml(entry.summary)}</p>
-    <p><strong>Category:</strong> ${escapeHtml(entry.category)}</p>
-    <p><strong>Maturity:</strong> ${escapeHtml(entry.maturity)}</p>
-    <p><strong>Support:</strong> Best effort and self-supported</p>
-    <p><strong>Targets:</strong> ${entry.integration_targets.map(escapeHtml).join(", ")}</p>
-    <p><strong>Maintainers:</strong> ${entry.maintainers.map(escapeHtml).join(", ")}</p>
-    <p><strong>Forward Minimum Version:</strong> ${escapeHtml(entry.compatibility.forward_min_version)}</p>
-    <p><strong>Tested Environments:</strong> ${entry.compatibility.tested_environments.map(escapeHtml).join(", ")}</p>
-    <p><strong>License:</strong> ${escapeHtml(entry.license)}</p>
-    <p><strong>Last Release Date:</strong> ${escapeHtml(entry.last_release_date)}</p>
-    <p><strong>Security Notes:</strong> ${escapeHtml(entry.security_notes)}</p>
+    <div class="notice">
+      Support model: Best-effort and self-supported. No Forward field-team SLA.
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-item">
+        <p>Category</p>
+        <p>${escapeHtml(entry.category)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Maturity</p>
+        <p>${escapeHtml(entry.maturity)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Support</p>
+        <p>${escapeHtml(entry.support_tier)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Forward Minimum Version</p>
+        <p>${escapeHtml(entry.compatibility.forward_min_version)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Tested Environments</p>
+        <p>${(entry.compatibility.tested_environments || []).map(escapeHtml).join(", ")}</p>
+      </div>
+      <div class="detail-item">
+        <p>License</p>
+        <p>${escapeHtml(entry.license)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Last Release Date</p>
+        <p>${escapeHtml(entry.last_release_date)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Maintainers</p>
+        <p>${(entry.maintainers || []).map(escapeHtml).join(", ")}</p>
+      </div>
+    </div>
+
+    <p><strong>Targets</strong></p>
+    <div class="badges">${targetBadges}</div>
+
+    <p><strong>Security Notes</strong></p>
+    <p>${escapeHtml(entry.security_notes)}</p>
+
     <div class="actions">
       <a class="btn" href="${escapeHtml(entry.repo_url)}" target="_blank" rel="noopener noreferrer">Repository</a>
       <a class="btn" href="${escapeHtml(entry.docs_url)}" target="_blank" rel="noopener noreferrer">Documentation</a>
