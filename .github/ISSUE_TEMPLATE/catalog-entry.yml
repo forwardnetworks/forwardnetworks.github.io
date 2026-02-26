@@ -1,0 +1,33 @@
+name: Catalog Entry Request
+description: Request a new integration listing or update an existing one
+title: "Catalog entry: "
+labels:
+  - catalog
+body:
+  - type: input
+    id: integration_id
+    attributes:
+      label: Integration ID
+      description: Lowercase slug such as `aws-sync`
+    validations:
+      required: true
+  - type: input
+    id: repo_url
+    attributes:
+      label: Repository URL
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One sentence, under 200 characters
+    validations:
+      required: true
+  - type: textarea
+    id: support_ack
+    attributes:
+      label: Support acknowledgment
+      description: Confirm this listing is best-effort and self-supported
+    validations:
+      required: true

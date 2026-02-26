@@ -1,0 +1,122 @@
+[
+  {
+    "id": "aws-sync",
+    "name": "AWS Sync",
+    "summary": "Synchronize AWS inventory and cloud metadata into Forward workflows.",
+    "repo_url": "https://github.com/forwardnetworks/aws-sync",
+    "docs_url": "https://github.com/forwardnetworks/aws-sync",
+    "category": "cloud-sync",
+    "integration_targets": ["forward", "aws"],
+    "maturity": "active",
+    "support_tier": "best_effort",
+    "maintainers": ["@forwardnetworks"],
+    "issue_url": "https://github.com/forwardnetworks/aws-sync/issues",
+    "license": "Apache-2.0",
+    "last_release_date": "2026-02-26",
+    "compatibility": {
+      "forward_min_version": "24.1",
+      "tested_environments": ["aws"]
+    },
+    "security_notes": "Use least-privilege IAM roles and rotate credentials regularly."
+  },
+  {
+    "id": "nautobot-app-ssot",
+    "name": "Nautobot App SSOT",
+    "summary": "Nautobot plugin integration path for syncing source-of-truth data with Forward workflows.",
+    "repo_url": "https://github.com/forwardnetworks/nautobot-app-ssot",
+    "docs_url": "https://github.com/forwardnetworks/nautobot-app-ssot",
+    "category": "source-of-truth",
+    "integration_targets": ["forward", "nautobot"],
+    "maturity": "active",
+    "support_tier": "best_effort",
+    "maintainers": ["@forwardnetworks"],
+    "issue_url": "https://github.com/forwardnetworks/nautobot-app-ssot/issues",
+    "license": "Apache-2.0",
+    "last_release_date": "2026-02-26",
+    "compatibility": {
+      "forward_min_version": "24.1",
+      "tested_environments": ["nautobot"]
+    },
+    "security_notes": "Scope API tokens to minimum required permissions."
+  },
+  {
+    "id": "forward-netbox",
+    "name": "Forward NetBox",
+    "summary": "NetBox-focused integration for inventory and operational sync use cases.",
+    "repo_url": "https://github.com/forwardnetworks/forward-netbox",
+    "docs_url": "https://github.com/forwardnetworks/forward-netbox",
+    "category": "source-of-truth",
+    "integration_targets": ["forward", "netbox"],
+    "maturity": "active",
+    "support_tier": "best_effort",
+    "maintainers": ["@forwardnetworks"],
+    "issue_url": "https://github.com/forwardnetworks/forward-netbox/issues",
+    "license": "Apache-2.0",
+    "last_release_date": "2026-02-26",
+    "compatibility": {
+      "forward_min_version": "24.1",
+      "tested_environments": ["netbox"]
+    },
+    "security_notes": "Avoid long-lived tokens and audit repository secrets periodically."
+  },
+  {
+    "id": "terraform-provider-forward",
+    "name": "Terraform Provider Forward",
+    "summary": "Terraform provider for automating Forward resources and configuration workflows.",
+    "repo_url": "https://github.com/forwardnetworks/terraform-provider-forward",
+    "docs_url": "https://github.com/forwardnetworks/terraform-provider-forward",
+    "category": "automation",
+    "integration_targets": ["forward", "terraform"],
+    "maturity": "active",
+    "support_tier": "best_effort",
+    "maintainers": ["@forwardnetworks"],
+    "issue_url": "https://github.com/forwardnetworks/terraform-provider-forward/issues",
+    "license": "MPL-2.0",
+    "last_release_date": "2026-02-26",
+    "compatibility": {
+      "forward_min_version": "24.1",
+      "tested_environments": ["terraform"]
+    },
+    "security_notes": "Use remote state with encryption and restricted backend access."
+  },
+  {
+    "id": "fwd-cvp-extension",
+    "name": "FWD CVP Extension",
+    "summary": "Arista CloudVision integration extension for Forward-driven workflows.",
+    "repo_url": "https://github.com/forwardnetworks/fwd-cvp-extension",
+    "docs_url": "https://github.com/forwardnetworks/fwd-cvp-extension",
+    "category": "automation",
+    "integration_targets": ["forward", "ansible"],
+    "maturity": "incubating",
+    "support_tier": "best_effort",
+    "maintainers": ["@forwardnetworks"],
+    "issue_url": "https://github.com/forwardnetworks/fwd-cvp-extension/issues",
+    "license": "Apache-2.0",
+    "last_release_date": "2026-02-26",
+    "compatibility": {
+      "forward_min_version": "24.1",
+      "tested_environments": ["ansible"]
+    },
+    "security_notes": "Validate third-party endpoint certs and constrain execution credentials."
+  },
+  {
+    "id": "forward-servicenow-connectivity-ticket-demo",
+    "name": "ServiceNow Connectivity Ticket Demo",
+    "summary": "Demo integration for generating and managing connectivity-driven ServiceNow tickets.",
+    "repo_url": "https://github.com/forwardnetworks/forward-servicenow-connectivity-ticket-demo",
+    "docs_url": "https://github.com/forwardnetworks/forward-servicenow-connectivity-ticket-demo",
+    "category": "reporting",
+    "integration_targets": ["forward"],
+    "maturity": "incubating",
+    "support_tier": "best_effort",
+    "maintainers": ["@forwardnetworks"],
+    "issue_url": "https://github.com/forwardnetworks/forward-servicenow-connectivity-ticket-demo/issues",
+    "license": "Apache-2.0",
+    "last_release_date": "2026-02-26",
+    "compatibility": {
+      "forward_min_version": "24.1",
+      "tested_environments": ["servicenow"]
+    },
+    "security_notes": "Use scoped ServiceNow API credentials and environment-specific secrets."
+  }
+]

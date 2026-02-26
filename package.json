@@ -1,0 +1,11 @@
+{
+  "name": "forwardnetworks.github.io",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Forward integrations catalog and static site",
+  "scripts": {
+    "validate": "node scripts/validate-registry.mjs",
+    "check-links": "node scripts/check-links.mjs",
+    "build": "node scripts/build-site.mjs"
+  }
+}
