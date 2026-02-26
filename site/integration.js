@@ -137,10 +137,6 @@ function renderEntry(entry) {
         <p>${escapeHtml(titleCase(entry.support_tier))}</p>
       </div>
       <div class="detail-item">
-        <p>Owner Team</p>
-        <p>${escapeHtml(entry.owner_team)}</p>
-      </div>
-      <div class="detail-item">
         <p>Verified By</p>
         <p>${linkedHandle(entry.verified_by)}</p>
       </div>

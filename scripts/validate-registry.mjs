@@ -7,7 +7,6 @@ const allowedMaturity = new Set(["incubating", "active", "deprecated"]);
 const allowedSupport = new Set(["best_effort"]);
 const idRegex = /^[a-z0-9-]+$/;
 const maintainerRegex = /^@[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?$/;
-const ownerTeamRegex = /^@[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const upstreamRepoRegex = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -58,7 +57,6 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
     "maturity",
     "support_tier",
     "maintainers",
-    "owner_team",
     "verified_by",
     "issue_url",
     "license",
@@ -119,10 +117,6 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
         errors.push(`${prefix}maintainer '${maintainer}' is invalid`);
       }
     }
-  }
-
-  if (typeof entry.owner_team !== "string" || !ownerTeamRegex.test(entry.owner_team)) {
-    errors.push(`${prefix}owner_team must match ${ownerTeamRegex}`);
   }
 
   if (typeof entry.verified_by !== "string" || !maintainerRegex.test(entry.verified_by)) {

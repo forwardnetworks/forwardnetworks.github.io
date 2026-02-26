@@ -14,7 +14,6 @@
     "maturity",
     "support_tier",
     "maintainers",
-    "owner_team",
     "verified_by",
     "issue_url",
     "license",
@@ -46,7 +45,6 @@
       "minItems": 1,
       "items": { "type": "string", "pattern": "^@[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)?$" }
     },
-    "owner_team": { "type": "string", "pattern": "^@[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
     "verified_by": { "type": "string", "pattern": "^@[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)?$" },
     "issue_url": { "type": "string", "format": "uri" },
     "license": { "type": "string", "minLength": 1 },

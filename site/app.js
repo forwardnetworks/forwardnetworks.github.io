@@ -99,7 +99,7 @@ function cardTemplate(entry, index) {
         <span class="readiness-text">${escapeHtml(repoActivityText)}</span>
       </div>
       ${forkMeta}
-      <p class="meta">Owner: ${escapeHtml(entry.owner_team)} | Verified by: ${linkedHandle(entry.verified_by)}</p>
+      <p class="meta">Verified by: ${linkedHandle(entry.verified_by)}</p>
       <p class="meta">Maintainers: ${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
       <div class="actions">
         <a class="btn" href="./integration.html?id=${encodeURIComponent(entry.id)}">Details</a>
@@ -148,7 +148,6 @@ function filterEntries(entries, query, targetFilter) {
       entry.support_tier,
       entry.last_verified_date,
       entry.last_repo_commit_date,
-      entry.owner_team,
       entry.verified_by,
       readiness.label,
       inactive,
