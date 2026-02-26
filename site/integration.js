@@ -125,7 +125,7 @@ function renderEntry(entry) {
       </div>
       <div class="detail-item">
         <p>Owner Team</p>
-        <p>${linkedHandle(entry.owner_team)}</p>
+        <p>${escapeHtml(entry.owner_team)}</p>
       </div>
       <div class="detail-item">
         <p>Verified By</p>

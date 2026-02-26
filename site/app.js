@@ -89,7 +89,7 @@ function cardTemplate(entry, index) {
         ${inactiveBadge}
         <span class="readiness-text">${escapeHtml(readinessText)}</span>
       </div>
-      <p class="meta">Owner: ${linkedHandle(entry.owner_team)} | Verified by: ${linkedHandle(entry.verified_by)}</p>
+      <p class="meta">Owner: ${escapeHtml(entry.owner_team)} | Verified by: ${linkedHandle(entry.verified_by)}</p>
       <p class="meta">Maintainers: ${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
       <div class="actions">
         <a class="btn" href="./integration.html?id=${encodeURIComponent(entry.id)}">Details</a>

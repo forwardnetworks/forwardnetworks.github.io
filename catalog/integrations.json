@@ -13,10 +13,10 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/aws-sync/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
@@ -43,10 +43,11 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@gaberger",
+      "@claude"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@gaberger",
     "issue_url": "https://github.com/forwardnetworks/forward-mcp/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-25",
@@ -73,10 +74,10 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/forward-netbox/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
@@ -103,10 +104,10 @@
     "maturity": "incubating",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/forward-servicenow-demo/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
@@ -133,10 +134,10 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/forwardnetworks-client-go/issues",
     "license": "Apache-2.0",
     "last_release_date": "2023-05-29",
@@ -163,10 +164,10 @@
     "maturity": "incubating",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@gaberger"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@gaberger",
     "issue_url": "https://github.com/forwardnetworks/fwd-cvp-extension/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
@@ -193,10 +194,10 @@
     "maturity": "incubating",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@gaberger"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@gaberger",
     "issue_url": "https://github.com/forwardnetworks/intent-gen/issues",
     "license": "Apache-2.0",
     "last_release_date": "2024-08-14",
@@ -223,10 +224,10 @@
     "maturity": "incubating",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/InventoryAPI/issues",
     "license": "Apache-2.0",
     "last_release_date": "2025-10-02",
@@ -253,10 +254,14 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@jdrew82",
+      "@progala",
+      "@snaselj",
+      "@bile0026",
+      "@Renrut5"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@jdrew82",
     "issue_url": "https://github.com/forwardnetworks/nautobot-app-ssot/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
@@ -283,10 +288,10 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@forwardnetworks"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@forwardnetworks/field-automation",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/terraform-provider-forward/issues",
     "license": "MPL-2.0",
     "last_release_date": "2026-02-26",
