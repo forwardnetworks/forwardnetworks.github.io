@@ -1,5 +1,6 @@
 const FRESH_DAYS = 30;
 const STALE_DAYS = 90;
+const INACTIVE_DAYS = 180;
 
 function escapeHtml(value) {
   return String(value)
@@ -48,6 +49,15 @@ function readinessFor(entry) {
   return { label: "stale", className: "readiness-stale", ageDays };
 }
 
+function inactiveFor(entry) {
+  const releaseAge = daysSince(entry.last_release_date);
+  const verifyAge = daysSince(entry.last_verified_date);
+  if (releaseAge === null || verifyAge === null) {
+    return false;
+  }
+  return releaseAge > INACTIVE_DAYS && verifyAge > INACTIVE_DAYS;
+}
+
 function titleCase(value) {
   return value
     .split("_")
@@ -70,8 +80,10 @@ function renderEntry(entry) {
   name.textContent = entry.name;
 
   const readiness = readinessFor(entry);
+  const isInactive = inactiveFor(entry);
   const targetBadges = (entry.integration_targets || []).map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
   const readinessText = readiness.ageDays === null ? "Unknown verification age" : `${readiness.ageDays} days since verification`;
+  const inactiveBadge = isInactive ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
 
   details.innerHTML = `
     <h2>${escapeHtml(entry.name)}</h2>
@@ -82,6 +94,7 @@ function renderEntry(entry) {
 
     <div class="readiness-row detail-readiness">
       <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
+      ${inactiveBadge}
       <span class="readiness-text">${escapeHtml(readinessText)}</span>
       <span class="readiness-text">Last verified: ${escapeHtml(entry.last_verified_date)}</span>
     </div>
@@ -98,6 +111,14 @@ function renderEntry(entry) {
       <div class="detail-item">
         <p>Support</p>
         <p>${escapeHtml(titleCase(entry.support_tier))}</p>
+      </div>
+      <div class="detail-item">
+        <p>Owner Team</p>
+        <p>${escapeHtml(entry.owner_team)}</p>
+      </div>
+      <div class="detail-item">
+        <p>Verified By</p>
+        <p>${escapeHtml(entry.verified_by)}</p>
       </div>
       <div class="detail-item">
         <p>Forward Minimum Version</p>

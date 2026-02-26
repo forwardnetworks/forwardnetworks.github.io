@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Support Policy</title>
+    <title>Catalog Changelog</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -16,15 +16,14 @@
         <span>Integrations Catalog</span>
       </a>
       <a class="back" href="./index.html">Back to catalog</a>
-      <h1>Support Policy</h1>
+      <h1>Catalog Changelog</h1>
+      <p class="subtitle">Recent registry diffs between the latest commit and prior baseline.</p>
     </header>
 
     <main class="shell">
       <article class="detail-card">
-        <h2>Best-Effort and Self-Supported</h2>
-        <p>All listings in this catalog are best-effort and self-supported.</p>
-        <p>There is no field-team SLA for listed integrations.</p>
-        <p>Use each integration repository issue tracker for support, bug reports, and maintenance requests.</p>
+        <p id="changelog-meta" class="meta">Loading changelog...</p>
+        <div id="changelog-list"></div>
       </article>
     </main>
 
@@ -33,5 +32,7 @@
       <a href="./submit.html">Submit an integration</a>
       <a href="./changelog.html">Changelog</a>
     </footer>
+
+    <script type="module" src="./changelog.js"></script>
   </body>
 </html>

@@ -7,6 +7,7 @@ const allowedMaturity = new Set(["incubating", "active", "deprecated"]);
 const allowedSupport = new Set(["best_effort"]);
 const idRegex = /^[a-z0-9-]+$/;
 const maintainerRegex = /^@[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?$/;
+const ownerTeamRegex = /^@[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 function mustBeHttpsUrl(label, value, errors, prefix) {
@@ -43,7 +44,7 @@ function parseDate(label, value, errors, prefix, options = {}) {
   return parsed;
 }
 
-function validateEntry(entry, index, ids, errors) {
+function validateEntry(entry, index, ids, errors, staleEntries) {
   const prefix = `entry[${index}] `;
   const required = [
     "id",
@@ -56,6 +57,8 @@ function validateEntry(entry, index, ids, errors) {
     "maturity",
     "support_tier",
     "maintainers",
+    "owner_team",
+    "verified_by",
     "issue_url",
     "license",
     "last_release_date",
@@ -116,12 +119,29 @@ function validateEntry(entry, index, ids, errors) {
     }
   }
 
+  if (typeof entry.owner_team !== "string" || !ownerTeamRegex.test(entry.owner_team)) {
+    errors.push(`${prefix}owner_team must match ${ownerTeamRegex}`);
+  }
+
+  if (typeof entry.verified_by !== "string" || !maintainerRegex.test(entry.verified_by)) {
+    errors.push(`${prefix}verified_by must match ${maintainerRegex}`);
+  }
+
   if (typeof entry.license !== "string" || !entry.license.trim()) {
     errors.push(`${prefix}license must be a non-empty string`);
   }
 
   parseDate("last_release_date", entry.last_release_date, errors, prefix);
-  parseDate("last_verified_date", entry.last_verified_date, errors, prefix, { disallowFuture: true });
+  const verifiedDate = parseDate("last_verified_date", entry.last_verified_date, errors, prefix, { disallowFuture: true });
+  if (verifiedDate) {
+    const now = new Date();
+    const utcToday = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const dayMs = 24 * 60 * 60 * 1000;
+    const age = Math.floor((utcToday - verifiedDate.getTime()) / dayMs);
+    if (age > 90) {
+      staleEntries.push({ id: entry.id, age });
+    }
+  }
 
   if (typeof entry.compatibility !== "object" || entry.compatibility === null) {
     errors.push(`${prefix}compatibility must be an object`);
@@ -166,13 +186,14 @@ async function main() {
 
   const errors = [];
   const ids = new Set();
+  const staleEntries = [];
 
   if (!Array.isArray(data)) {
     console.error("integrations.json must contain a top-level array");
     process.exit(1);
   }
 
-  data.forEach((entry, index) => validateEntry(entry, index, ids, errors));
+  data.forEach((entry, index) => validateEntry(entry, index, ids, errors, staleEntries));
 
   if (errors.length > 0) {
     console.error("Registry validation failed:\n");
@@ -183,6 +204,13 @@ async function main() {
   }
 
   console.log(`Registry validation passed: ${data.length} entries`);
+
+  if (staleEntries.length > 0) {
+    console.warn("\nStale verification warning (>90 days):");
+    for (const stale of staleEntries.sort((a, b) => b.age - a.age)) {
+      console.warn(`- ${stale.id}: ${stale.age} days`);
+    }
+  }
 }
 
 main().catch((error) => {

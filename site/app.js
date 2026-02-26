@@ -1,5 +1,6 @@
 const FRESH_DAYS = 30;
 const STALE_DAYS = 90;
+const INACTIVE_DAYS = 180;
 
 function escapeHtml(value) {
   return String(value)
@@ -43,6 +44,15 @@ function readinessFor(entry) {
   return { label: "stale", className: "readiness-stale", ageDays };
 }
 
+function inactiveFor(entry) {
+  const releaseAge = daysSince(entry.last_release_date);
+  const verifyAge = daysSince(entry.last_verified_date);
+  if (releaseAge === null || verifyAge === null) {
+    return false;
+  }
+  return releaseAge > INACTIVE_DAYS && verifyAge > INACTIVE_DAYS;
+}
+
 function titleCase(value) {
   return value
     .split("_")
@@ -55,6 +65,7 @@ function cardTemplate(entry, index) {
   const delay = Math.min(index * 60, 420);
   const readiness = readinessFor(entry);
   const readinessText = readiness.ageDays === null ? "Unknown" : `Verified ${readiness.ageDays}d ago`;
+  const inactiveBadge = inactiveFor(entry) ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
 
   return `
     <article class="card" style="animation-delay:${delay}ms">
@@ -64,8 +75,10 @@ function cardTemplate(entry, index) {
       <div class="badges">${targets}</div>
       <div class="readiness-row">
         <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
+        ${inactiveBadge}
         <span class="readiness-text">${escapeHtml(readinessText)}</span>
       </div>
+      <p class="meta">Owner: ${escapeHtml(entry.owner_team)} | Verified by: ${escapeHtml(entry.verified_by)}</p>
       <div class="actions">
         <a class="btn" href="./integration.html?id=${encodeURIComponent(entry.id)}">Details</a>
         <a class="btn" href="${escapeHtml(entry.repo_url)}" target="_blank" rel="noopener noreferrer">Repository</a>
@@ -102,6 +115,7 @@ function filterEntries(entries, query, targetFilter) {
     }
 
     const readiness = readinessFor(entry);
+    const inactive = inactiveFor(entry) ? "inactive" : "";
 
     const searchable = [
       entry.id,
@@ -111,7 +125,10 @@ function filterEntries(entries, query, targetFilter) {
       entry.maturity,
       entry.support_tier,
       entry.last_verified_date,
+      entry.owner_team,
+      entry.verified_by,
       readiness.label,
+      inactive,
       ...(entry.integration_targets || [])
     ]
       .join(" ")

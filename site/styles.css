@@ -213,6 +213,7 @@ input::placeholder {
 input:focus,
 .chip:focus-visible,
 a.btn:focus-visible,
+button.btn:focus-visible,
 a.card-link:focus-visible {
   outline: 2px solid var(--accent-2);
   outline-offset: 2px;
@@ -405,6 +406,12 @@ a.btn:hover {
   color: #ffffff;
 }
 
+button.btn {
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
 a.card-link {
   color: var(--accent);
 }
@@ -456,6 +463,21 @@ a.card-link {
   border-left: 4px solid var(--signal);
   padding-left: 0.8rem;
   color: var(--ink-soft);
+}
+
+.template-preview {
+  margin-top: 0.8rem;
+  background: #eef6fd;
+  border: 1px solid #bbd0e3;
+  border-radius: 10px;
+  padding: 0.9rem;
+  overflow: auto;
+  max-height: 320px;
+  color: #123f68;
+}
+
+.changelog-item {
+  margin-bottom: 0.8rem;
 }
 
 @media (max-width: 900px) {
