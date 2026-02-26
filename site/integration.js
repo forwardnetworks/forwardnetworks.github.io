@@ -95,6 +95,12 @@ function renderEntry(entry) {
   const targetBadges = (entry.integration_targets || []).map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
   const readinessText = readiness.ageDays === null ? "Unknown verification age" : `${readiness.ageDays} days since verification`;
   const inactiveBadge = isInactive ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
+  const forkBadge = entry.fork ? '<span class="readiness-badge readiness-fork">fork</span>' : "";
+  const forkPanel = entry.fork
+    ? `<div class="notice">
+      Fork source: <a class="meta-link" href="https://github.com/${escapeHtml(entry.fork.upstream_repo)}" target="_blank" rel="noopener noreferrer">${escapeHtml(entry.fork.upstream_repo)}</a> (${escapeHtml(entry.fork.upstream_branch)} -> ${escapeHtml(entry.fork.fork_branch)}). ${escapeHtml(entry.fork.note)}
+    </div>`
+    : "";
 
   details.innerHTML = `
     <h2>${escapeHtml(entry.name)}</h2>
@@ -105,10 +111,12 @@ function renderEntry(entry) {
 
     <div class="readiness-row detail-readiness">
       <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
+      ${forkBadge}
       ${inactiveBadge}
       <span class="readiness-text">${escapeHtml(readinessText)}</span>
       <span class="readiness-text">Last verified: ${escapeHtml(entry.last_verified_date)}</span>
     </div>
+    ${forkPanel}
 
     <div class="detail-grid">
       <div class="detail-item">

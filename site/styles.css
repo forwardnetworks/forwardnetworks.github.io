@@ -379,6 +379,12 @@ a.card-link:focus-visible {
   border: 1px solid #ecb7af;
 }
 
+.readiness-fork {
+  background: #e7ecff;
+  color: #2a3d8b;
+  border: 1px solid #bfc9f4;
+}
+
 .readiness-unknown {
   background: #eceff3;
   color: #344c63;

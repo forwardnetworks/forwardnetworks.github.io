@@ -65,6 +65,17 @@
       "additionalProperties": false
     },
     "security_notes": { "type": "string", "minLength": 1 },
+    "fork": {
+      "type": "object",
+      "required": ["upstream_repo", "upstream_branch", "fork_branch", "note"],
+      "properties": {
+        "upstream_repo": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "upstream_branch": { "type": "string", "minLength": 1 },
+        "fork_branch": { "type": "string", "minLength": 1 },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
     "deprecation": {
       "type": "object",
       "required": ["status", "date", "replacement"],

@@ -8,6 +8,7 @@ const allowedSupport = new Set(["best_effort"]);
 const idRegex = /^[a-z0-9-]+$/;
 const maintainerRegex = /^@[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?$/;
 const ownerTeamRegex = /^@[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
+const upstreamRepoRegex = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 function mustBeHttpsUrl(label, value, errors, prefix) {
@@ -175,6 +176,25 @@ function validateEntry(entry, index, ids, errors, staleEntries) {
       }
       if (!entry.deprecation.replacement) {
         errors.push(`${prefix}deprecation.replacement is required when deprecation is present`);
+      }
+    }
+  }
+
+  if (entry.fork) {
+    if (typeof entry.fork !== "object" || entry.fork === null) {
+      errors.push(`${prefix}fork must be an object if present`);
+    } else {
+      if (typeof entry.fork.upstream_repo !== "string" || !upstreamRepoRegex.test(entry.fork.upstream_repo)) {
+        errors.push(`${prefix}fork.upstream_repo must match ${upstreamRepoRegex}`);
+      }
+      if (typeof entry.fork.upstream_branch !== "string" || !entry.fork.upstream_branch.trim()) {
+        errors.push(`${prefix}fork.upstream_branch must be a non-empty string`);
+      }
+      if (typeof entry.fork.fork_branch !== "string" || !entry.fork.fork_branch.trim()) {
+        errors.push(`${prefix}fork.fork_branch must be a non-empty string`);
+      }
+      if (typeof entry.fork.note !== "string" || !entry.fork.note.trim()) {
+        errors.push(`${prefix}fork.note must be a non-empty string`);
       }
     }
   }

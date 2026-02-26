@@ -77,6 +77,10 @@ function cardTemplate(entry, index) {
   const readiness = readinessFor(entry);
   const readinessText = readiness.ageDays === null ? "Unknown" : `Verified ${readiness.ageDays}d ago`;
   const inactiveBadge = inactiveFor(entry) ? '<span class="readiness-badge readiness-unknown">inactive 6m+</span>' : "";
+  const forkBadge = entry.fork ? '<span class="readiness-badge readiness-fork">fork</span>' : "";
+  const forkMeta = entry.fork
+    ? `<p class="meta">Fork source: <a class="meta-link" href="https://github.com/${escapeHtml(entry.fork.upstream_repo)}" target="_blank" rel="noopener noreferrer">${escapeHtml(entry.fork.upstream_repo)}</a></p>`
+    : "";
 
   return `
     <article class="card" style="animation-delay:${delay}ms">
@@ -86,9 +90,11 @@ function cardTemplate(entry, index) {
       <div class="badges">${targets}</div>
       <div class="readiness-row">
         <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
+        ${forkBadge}
         ${inactiveBadge}
         <span class="readiness-text">${escapeHtml(readinessText)}</span>
       </div>
+      ${forkMeta}
       <p class="meta">Owner: ${escapeHtml(entry.owner_team)} | Verified by: ${linkedHandle(entry.verified_by)}</p>
       <p class="meta">Maintainers: ${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
       <div class="actions">

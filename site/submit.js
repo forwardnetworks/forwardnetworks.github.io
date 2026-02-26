@@ -20,6 +20,13 @@ const template = {
     tested_environments: ["aws"]
   },
   security_notes: "Document secret handling, access boundaries, and cert expectations."
+  // Optional fork metadata:
+  // fork: {
+  //   upstream_repo: "upstream-org/upstream-repo",
+  //   upstream_branch: "main",
+  //   fork_branch: "forward-enterprise",
+  //   note: "Forked integration. Maintainers listed here are fork-specific contributors."
+  // }
 };
 
 function copyText(text) {

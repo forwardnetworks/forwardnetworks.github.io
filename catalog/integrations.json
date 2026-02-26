@@ -43,8 +43,7 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@gaberger",
-      "@claude"
+      "@gaberger"
     ],
     "owner_team": "@forwardnetworks/field-automation",
     "verified_by": "@gaberger",
@@ -254,14 +253,10 @@
     "maturity": "active",
     "support_tier": "best_effort",
     "maintainers": [
-      "@jdrew82",
-      "@progala",
-      "@snaselj",
-      "@bile0026",
-      "@Renrut5"
+      "@captainpacket"
     ],
     "owner_team": "@forwardnetworks/field-automation",
-    "verified_by": "@jdrew82",
+    "verified_by": "@captainpacket",
     "issue_url": "https://github.com/forwardnetworks/nautobot-app-ssot/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
@@ -272,7 +267,13 @@
         "nautobot"
       ]
     },
-    "security_notes": "Scope API tokens to minimum required permissions."
+    "security_notes": "Scope API tokens to minimum required permissions.",
+    "fork": {
+      "upstream_repo": "nautobot/nautobot-app-ssot",
+      "upstream_branch": "develop",
+      "fork_branch": "forward-enterprise",
+      "note": "Forked integration. Maintainers listed here are fork-specific contributors, not upstream project authors."
+    }
   },
   {
     "id": "terraform-provider-forward",
