@@ -13,6 +13,7 @@
     "issue_url": "https://github.com/forwardnetworks/aws-sync/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
+    "last_verified_date": "2026-02-20",
     "compatibility": {
       "forward_min_version": "24.1",
       "tested_environments": ["aws"]
@@ -33,6 +34,7 @@
     "issue_url": "https://github.com/forwardnetworks/nautobot-app-ssot/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
+    "last_verified_date": "2025-12-20",
     "compatibility": {
       "forward_min_version": "24.1",
       "tested_environments": ["nautobot"]
@@ -53,6 +55,7 @@
     "issue_url": "https://github.com/forwardnetworks/forward-netbox/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
+    "last_verified_date": "2025-10-15",
     "compatibility": {
       "forward_min_version": "24.1",
       "tested_environments": ["netbox"]
@@ -73,6 +76,7 @@
     "issue_url": "https://github.com/forwardnetworks/terraform-provider-forward/issues",
     "license": "MPL-2.0",
     "last_release_date": "2026-02-26",
+    "last_verified_date": "2026-01-31",
     "compatibility": {
       "forward_min_version": "24.1",
       "tested_environments": ["terraform"]
@@ -93,6 +97,7 @@
     "issue_url": "https://github.com/forwardnetworks/fwd-cvp-extension/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
+    "last_verified_date": "2025-11-20",
     "compatibility": {
       "forward_min_version": "24.1",
       "tested_environments": ["ansible"]
@@ -113,6 +118,7 @@
     "issue_url": "https://github.com/forwardnetworks/forward-servicenow-connectivity-ticket-demo/issues",
     "license": "Apache-2.0",
     "last_release_date": "2026-02-26",
+    "last_verified_date": "2026-01-05",
     "compatibility": {
       "forward_min_version": "24.1",
       "tested_environments": ["servicenow"]

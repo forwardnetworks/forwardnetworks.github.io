@@ -20,15 +20,27 @@ function mustBeHttpsUrl(label, value, errors, prefix) {
   }
 }
 
-function mustBeDate(label, value, errors, prefix) {
+function parseDate(label, value, errors, prefix, options = {}) {
   if (!dateRegex.test(value)) {
     errors.push(`${prefix}${label} must match YYYY-MM-DD`);
-    return;
+    return null;
   }
+
   const parsed = new Date(`${value}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) {
     errors.push(`${prefix}${label} must be a valid date`);
+    return null;
   }
+
+  if (options.disallowFuture) {
+    const today = new Date();
+    const todayUtc = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+    if (parsed.getTime() > todayUtc) {
+      errors.push(`${prefix}${label} cannot be in the future`);
+    }
+  }
+
+  return parsed;
 }
 
 function validateEntry(entry, index, ids, errors) {
@@ -47,6 +59,7 @@ function validateEntry(entry, index, ids, errors) {
     "issue_url",
     "license",
     "last_release_date",
+    "last_verified_date",
     "compatibility",
     "security_notes"
   ];
@@ -107,7 +120,8 @@ function validateEntry(entry, index, ids, errors) {
     errors.push(`${prefix}license must be a non-empty string`);
   }
 
-  mustBeDate("last_release_date", entry.last_release_date, errors, prefix);
+  parseDate("last_release_date", entry.last_release_date, errors, prefix);
+  parseDate("last_verified_date", entry.last_verified_date, errors, prefix, { disallowFuture: true });
 
   if (typeof entry.compatibility !== "object" || entry.compatibility === null) {
     errors.push(`${prefix}compatibility must be an object`);
@@ -137,7 +151,7 @@ function validateEntry(entry, index, ids, errors) {
       if (!entry.deprecation.date) {
         errors.push(`${prefix}deprecation.date is required when deprecation is present`);
       } else {
-        mustBeDate("deprecation.date", entry.deprecation.date, errors, prefix);
+        parseDate("deprecation.date", entry.deprecation.date, errors, prefix);
       }
       if (!entry.deprecation.replacement) {
         errors.push(`${prefix}deprecation.replacement is required when deprecation is present`);

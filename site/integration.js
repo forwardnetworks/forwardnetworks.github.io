@@ -1,3 +1,6 @@
+const FRESH_DAYS = 30;
+const STALE_DAYS = 90;
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -10,6 +13,46 @@ function escapeHtml(value) {
 function getId() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
+}
+
+function parseDate(dateString) {
+  const value = new Date(`${dateString}T00:00:00Z`);
+  return Number.isNaN(value.getTime()) ? null : value;
+}
+
+function daysSince(dateString) {
+  const parsed = parseDate(dateString);
+  if (!parsed) {
+    return null;
+  }
+  const now = new Date();
+  const utcToday = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const dayMs = 24 * 60 * 60 * 1000;
+  return Math.floor((utcToday - parsed.getTime()) / dayMs);
+}
+
+function readinessFor(entry) {
+  const ageDays = daysSince(entry.last_verified_date);
+  if (ageDays === null) {
+    return { label: "unknown", className: "readiness-unknown", ageDays: null };
+  }
+
+  if (ageDays <= FRESH_DAYS) {
+    return { label: "fresh", className: "readiness-fresh", ageDays };
+  }
+
+  if (ageDays <= STALE_DAYS) {
+    return { label: "aging", className: "readiness-aging", ageDays };
+  }
+
+  return { label: "stale", className: "readiness-stale", ageDays };
+}
+
+function titleCase(value) {
+  return value
+    .split("_")
+    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
+    .join(" ");
 }
 
 async function loadEntry(id) {
@@ -26,13 +69,21 @@ function renderEntry(entry) {
   const details = document.getElementById("details");
   name.textContent = entry.name;
 
+  const readiness = readinessFor(entry);
   const targetBadges = (entry.integration_targets || []).map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
+  const readinessText = readiness.ageDays === null ? "Unknown verification age" : `${readiness.ageDays} days since verification`;
 
   details.innerHTML = `
     <h2>${escapeHtml(entry.name)}</h2>
     <p>${escapeHtml(entry.summary)}</p>
     <div class="notice">
       Support model: Best-effort and self-supported. No Forward field-team SLA.
+    </div>
+
+    <div class="readiness-row detail-readiness">
+      <span class="readiness-badge ${readiness.className}">${escapeHtml(readiness.label)}</span>
+      <span class="readiness-text">${escapeHtml(readinessText)}</span>
+      <span class="readiness-text">Last verified: ${escapeHtml(entry.last_verified_date)}</span>
     </div>
 
     <div class="detail-grid">
@@ -46,7 +97,7 @@ function renderEntry(entry) {
       </div>
       <div class="detail-item">
         <p>Support</p>
-        <p>${escapeHtml(entry.support_tier)}</p>
+        <p>${escapeHtml(titleCase(entry.support_tier))}</p>
       </div>
       <div class="detail-item">
         <p>Forward Minimum Version</p>
@@ -70,7 +121,7 @@ function renderEntry(entry) {
       </div>
     </div>
 
-    <p><strong>Targets</strong></p>
+    <p><strong>Target Systems</strong></p>
     <div class="badges">${targetBadges}</div>
 
     <p><strong>Security Notes</strong></p>
