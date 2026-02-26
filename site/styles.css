@@ -313,6 +313,17 @@ a.card-link:focus-visible {
   color: var(--ink-soft);
 }
 
+.meta-link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dotted #8bb5d4;
+}
+
+.meta-link:hover {
+  color: var(--accent-2);
+  border-bottom-color: var(--accent-2);
+}
+
 .badges {
   display: flex;
   flex-wrap: wrap;

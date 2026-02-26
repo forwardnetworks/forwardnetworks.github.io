@@ -65,6 +65,17 @@ function titleCase(value) {
     .join(" ");
 }
 
+function handleToGithubUrl(handle) {
+  const normalized = String(handle || "").replace(/^@/, "");
+  return `https://github.com/${normalized}`;
+}
+
+function linkedHandle(handle) {
+  const safeHandle = escapeHtml(handle);
+  const href = escapeHtml(handleToGithubUrl(handle));
+  return `<a class="meta-link" href="${href}" target="_blank" rel="noopener noreferrer">${safeHandle}</a>`;
+}
+
 async function loadEntry(id) {
   const response = await fetch("./catalog/integrations.json", { cache: "no-store" });
   if (!response.ok) {
@@ -114,11 +125,11 @@ function renderEntry(entry) {
       </div>
       <div class="detail-item">
         <p>Owner Team</p>
-        <p>${escapeHtml(entry.owner_team)}</p>
+        <p>${linkedHandle(entry.owner_team)}</p>
       </div>
       <div class="detail-item">
         <p>Verified By</p>
-        <p>${escapeHtml(entry.verified_by)}</p>
+        <p>${linkedHandle(entry.verified_by)}</p>
       </div>
       <div class="detail-item">
         <p>Forward Minimum Version</p>
@@ -138,7 +149,7 @@ function renderEntry(entry) {
       </div>
       <div class="detail-item">
         <p>Maintainers</p>
-        <p>${(entry.maintainers || []).map(escapeHtml).join(", ")}</p>
+        <p>${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
       </div>
     </div>
 

@@ -60,6 +60,17 @@ function titleCase(value) {
     .join(" ");
 }
 
+function handleToGithubUrl(handle) {
+  const normalized = String(handle || "").replace(/^@/, "");
+  return `https://github.com/${normalized}`;
+}
+
+function linkedHandle(handle) {
+  const safeHandle = escapeHtml(handle);
+  const href = escapeHtml(handleToGithubUrl(handle));
+  return `<a class="meta-link" href="${href}" target="_blank" rel="noopener noreferrer">${safeHandle}</a>`;
+}
+
 function cardTemplate(entry, index) {
   const targets = entry.integration_targets.map((target) => `<span class="badge">${escapeHtml(target)}</span>`).join(" ");
   const delay = Math.min(index * 60, 420);
@@ -78,7 +89,8 @@ function cardTemplate(entry, index) {
         ${inactiveBadge}
         <span class="readiness-text">${escapeHtml(readinessText)}</span>
       </div>
-      <p class="meta">Owner: ${escapeHtml(entry.owner_team)} | Verified by: ${escapeHtml(entry.verified_by)}</p>
+      <p class="meta">Owner: ${linkedHandle(entry.owner_team)} | Verified by: ${linkedHandle(entry.verified_by)}</p>
+      <p class="meta">Maintainers: ${(entry.maintainers || []).map(linkedHandle).join(", ")}</p>
       <div class="actions">
         <a class="btn" href="./integration.html?id=${encodeURIComponent(entry.id)}">Details</a>
         <a class="btn" href="${escapeHtml(entry.repo_url)}" target="_blank" rel="noopener noreferrer">Repository</a>
